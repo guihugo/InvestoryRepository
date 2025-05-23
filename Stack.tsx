@@ -1,14 +1,14 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignUp from './Components/SignUp';
-import LogIn from './Components/LogIn';
+import RecoveryPassword from './Components/RecoveryPassword';
 import Home from './Components/Home';
 import AppScreen from './Components/AppScreen';
 
 export type RootStackParamList = {
   App: undefined;
   SignUp: undefined;
-  LogIn: undefined;
+  RecoveryPassword: undefined;
   Home: {userData: any};
 };
 
@@ -28,9 +28,9 @@ export default function MainNavigator() {
         options={{ title: 'Sign Up',  headerShown: false }}
       />
       <Stack.Screen
-        name="LogIn"
-        component={LogIn}
-        options={{ title: 'Log In',  headerShown: false  }}
+        name="RecoveryPassword"
+        component={RecoveryPassword}
+        options={{ title: 'Recovery Password',  headerShown: false  }}
       />
       <Stack.Screen
         name="Home"

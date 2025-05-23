@@ -1,41 +1,54 @@
 import { useState } from "react";
+import { useCustomerController } from "./CustomerController";
 
 export default function useSignUpController() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { handleCreateCustomer } = useCustomerController();
 
-  const handleSignUp= async () => {
+  const handleRegister = async (firstName: string, lastName: string) => {
+    setLoading(true);
+    setError(null);
+    const requestBody = JSON.stringify({ email, password });
+
+    console.log("Request Body:", requestBody);
+
     try {
-      const response = await fetch('http://10.0.2.2:5225/api/Customer', {
-        method: 'POST',
+      const response = await fetch("http://10.0.2.2:5225/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ firstName, lastName, email, password }),
+        body: requestBody,
+        
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Sign Up successful:', data);
-      } else {
-        console.error('Sign Up failed');
+      
+      if (!response.ok) {
+        throw new Error("Failed to register user");
       }
-    } catch (error) {
-      console.error('Error:', error);
+
+      console.log("Sign Up successful");
+
+      handleCreateCustomer(firstName, lastName, email);
+
+    } catch (err) {
+      console.error("Error:", err);
+      setError("Registration failed. Please try again.");
+      
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
     email,
     setEmail,
     password,
     setPassword,
-    handleSignUp,
+    handleRegister,
+    loading,
+    error,
   };
 }
